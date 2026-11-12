@@ -24,7 +24,7 @@
         .container {
             max-width: 900px;
             margin: 0 auto;
-            padding-bottom: 140px;
+            padding-bottom: 200px;
         }
 
         /* Encabezado */
@@ -88,6 +88,10 @@
             display: flex;
             flex-direction: column;
             gap: 6px;
+        }
+
+        .config-group.full-width {
+            grid-column: span 2;
         }
 
         .config-group label {
@@ -187,6 +191,54 @@
         .cart-container {
             max-width: 900px;
             margin: 0 auto;
+        }
+
+        .precio-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 174, 0, 0.2);
+        }
+
+        .precio-row label {
+            font-size: 0.9rem;
+            color: #ffae00;
+            font-weight: 600;
+        }
+
+        .precio-row input {
+            width: 140px;
+            padding: 6px 10px;
+            background: #000;
+            border: 1px solid #ffae00;
+            border-radius: 6px;
+            color: #fff;
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+
+        .itbis-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: #e0e0e0;
+        }
+
+        .itbis-row input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #ffae00;
+            cursor: pointer;
         }
 
         .action-buttons {
@@ -320,6 +372,37 @@
             color: #f0f0f0;
         }
 
+        .paper-totals {
+            padding: 15px 40px 25px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .paper-totals-box {
+            width: 300px;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 18px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 174, 0, 0.3);
+        }
+
+        .paper-total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        .paper-total-row.final {
+            border-top: 2px solid rgba(255, 174, 0, 0.4);
+            padding-top: 10px;
+            margin-top: 6px;
+            font-weight: bold;
+            font-size: 1.15rem;
+            color: #ffae00;
+        }
+
         .paper-notes {
             padding: 25px 40px;
             background: rgba(0, 0, 0, 0.4);
@@ -399,6 +482,10 @@
                 <label for="fechaEvento">📅 Fecha del Evento:</label>
                 <input type="text" id="fechaEvento" placeholder="Ej. 24 de Diciembre" oninput="actualizarTodo()">
             </div>
+            <div class="config-group full-width">
+                <label for="rncCliente">🏢 RNC / Cédula (Para Crédito Fiscal - Opcional):</label>
+                <input type="text" id="rncCliente" placeholder="Ej. 131-XXXXX-X o RNC empresarial" oninput="actualizarTodo()">
+            </div>
         </div>
 
         <div id="menuContent"></div>
@@ -411,6 +498,16 @@
     <!-- PANEL FLOTANTE INFERIOR -->
     <div class="cart-panel" id="cartPanel">
         <div class="cart-container">
+            <div class="precio-row">
+                <label for="precioPersona">💰 Precio estimado por persona (RD$):</label>
+                <input type="number" id="precioPersona" min="0" placeholder="RD$ 0.00" oninput="actualizarTodo()">
+            </div>
+
+            <div class="itbis-row">
+                <input type="checkbox" id="checkItbis" onchange="actualizarTodo()">
+                <label for="checkItbis" style="cursor: pointer; color: #ffae00; font-weight: 600;">Aplicar ITBIS (18%) para Comprobante Fiscal</label>
+            </div>
+
             <div class="action-buttons">
                 <a href="#" id="wsBtn1" class="btn-action btn-ws" target="_blank">📲 WhatsApp 1</a>
                 <a href="#" id="wsBtn2" class="btn-action btn-ws" target="_blank">📲 WhatsApp 2</a>
@@ -443,6 +540,7 @@
                     <h3>Datos del Cliente</h3>
                     <p><strong>Cliente:</strong> <span id="pdfNombre">-</span></p>
                     <p><strong>Teléfono:</strong> <span id="pdfTelefono">-</span></p>
+                    <p><strong>RNC/Cédula:</strong> <span id="pdfRnc">N/A</span></p>
                 </div>
                 <div>
                     <h3>Detalles del Evento</h3>
@@ -465,6 +563,12 @@
                 </table>
             </div>
 
+            <div class="paper-totals">
+                <div class="paper-totals-box" id="boxTotales">
+                    <!-- Se actualiza dinámicamente según si lleva ITBIS o no -->
+                </div>
+            </div>
+
             <div class="paper-notes">
                 <h4>Condiciones de Pago:</h4>
                 <p>1. Para reservar la fecha se requiere un depósito inicial del 50%.</p>
@@ -484,7 +588,10 @@
                     { id: 3, nombre: "Pierna de cerdo horneada" },
                     { id: 4, nombre: "Pechuga cordon blue" },
                     { id: 5, nombre: "Lomo de cerdo" },
-                    { id: 6, nombre: "Pechuga a la crema" }
+                    { id: 6, nombre: "Pechuga a la crema" },
+                    { id: 37, nombre: "Pollo horneado" },
+                    { id: 38, nombre: "Filete de res" },
+                    { id: 39, nombre: "Salmón" }
                 ]
             },
             {
@@ -506,7 +613,8 @@
                     { id: 15, nombre: "Canelones rellenos" },
                     { id: 16, nombre: "Pastelón de berenjena" },
                     { id: 17, nombre: "Pastelón de plátano maduro" },
-                    { id: 18, nombre: "Pasteles en hoja" }
+                    { id: 18, nombre: "Pasteles en hoja" },
+                    { id: 42, nombre: "Pastelón de plátano maduro y berenjena" }
                 ]
             },
             {
@@ -587,12 +695,16 @@
 
         function actualizarMensajesWS() {
             const nombre = document.getElementById('nombreCliente').value.trim();
-            const personas = document.getElementById('numPersonas').value.trim();
+            const rnc = document.getElementById('rncCliente').value.trim();
+            const personas = parseInt(document.getElementById('numPersonas').value) || 0;
             const fecha = document.getElementById('fechaEvento').value.trim();
+            const precioP = parseFloat(document.getElementById('precioPersona').value) || 0;
+            const aplicarItbis = document.getElementById('checkItbis').checked;
 
             let msg = "🎄 *SOLICITUD DE COTIZACIÓN - ANTOJITOS GOURMET* 🎄\n\n";
             if (nombre) msg += `👤 *Cliente:* ${nombre}\n`;
-            if (personas) msg += `👥 *Personas:* ${personas}\n`;
+            if (rnc) msg += `🏢 *RNC / Cédula:* ${rnc}\n`;
+            if (personas > 0) msg += `👥 *Personas:* ${personas}\n`;
             if (fecha) msg += `📅 *Fecha:* ${fecha}\n`;
             
             msg += `\n*Platos Seleccionados:*\n`;
@@ -600,7 +712,22 @@
                 msg += `• ${seleccionados[id].nombre}\n`;
             }
 
-            msg += `\n¡Hola Antojitos Gourmet! Quisiera solicitar una cotización para esta selección de platos.`;
+            if (precioP > 0 && personas > 0) {
+                const subtotal = precioP * personas;
+                msg += `\n💰 *Precio p/persona:* RD$ ${precioP.toLocaleString('es-DO')}.00`;
+                
+                if (aplicarItbis) {
+                    const itbis = subtotal * 0.18;
+                    const totalGeneral = subtotal + itbis;
+                    msg += `\n📋 *Subtotal:* RD$ ${subtotal.toLocaleString('es-DO')}.00`;
+                    msg += `\n📊 *ITBIS (18%):* RD$ ${itbis.toLocaleString('es-DO')}.00`;
+                    msg += `\n💵 *Total General:* RD$ ${totalGeneral.toLocaleString('es-DO')}.00 (Con Crédito Fiscal)`;
+                } else {
+                    msg += `\n💵 *Total General:* RD$ ${subtotal.toLocaleString('es-DO')}.00 (No incluye ITBIS)`;
+                }
+            }
+
+            msg += `\n\n¡Hola Antojitos Gourmet! Quisiera confirmar disponibilidad para esta cotización.`;
 
             document.getElementById('wsBtn1').href = `https://wa.me/${WHATSAPP_1}?text=${encodeURIComponent(msg)}`;
             document.getElementById('wsBtn2').href = `https://wa.me/${WHATSAPP_2}?text=${encodeURIComponent(msg)}`;
@@ -609,11 +736,52 @@
         function mostrarCotizaciónFormal() {
             const nombre = document.getElementById('nombreCliente').value.trim() || "Cliente Especial";
             const telefono = document.getElementById('telefonoCliente').value.trim() || "N/A";
+            const rnc = document.getElementById('rncCliente').value.trim() || "N/A";
             const personas = parseInt(document.getElementById('numPersonas').value) || 0;
             const fecha = document.getElementById('fechaEvento').value.trim() || "Por confirmar";
+            const precioP = parseFloat(document.getElementById('precioPersona').value) || 0;
+            const aplicarItbis = document.getElementById('checkItbis').checked;
+
+            const subtotal = precioP * personas;
+            const boxTotales = document.getElementById('boxTotales');
+
+            if (aplicarItbis) {
+                const itbis = subtotal * 0.18;
+                const totalGeneral = subtotal + itbis;
+                boxTotales.innerHTML = `
+                    <div class="paper-total-row">
+                        <span>Subtotal:</span>
+                        <span>RD$ ${subtotal.toLocaleString('es-DO')}.00</span>
+                    </div>
+                    <div class="paper-total-row">
+                        <span>ITBIS (18%):</span>
+                        <span>RD$ ${itbis.toLocaleString('es-DO')}.00</span>
+                    </div>
+                    <div class="paper-total-row final">
+                        <span>Total General:</span>
+                        <span>RD$ ${totalGeneral.toLocaleString('es-DO')}.00</span>
+                    </div>
+                `;
+            } else {
+                boxTotales.innerHTML = `
+                    <div class="paper-total-row">
+                        <span>Precio p/persona:</span>
+                        <span>RD$ ${precioP.toLocaleString('es-DO')}.00</span>
+                    </div>
+                    <div class="paper-total-row">
+                        <span>Cant. Personas:</span>
+                        <span>${personas}</span>
+                    </div>
+                    <div class="paper-total-row final">
+                        <span>Total General:</span>
+                        <span>RD$ ${subtotal.toLocaleString('es-DO')}.00</span>
+                    </div>
+                `;
+            }
 
             document.getElementById('pdfNombre').textContent = nombre;
             document.getElementById('pdfTelefono').textContent = telefono;
+            document.getElementById('pdfRnc').textContent = rnc;
             document.getElementById('pdfPersonas').textContent = personas;
             document.getElementById('pdfFecha').textContent = fecha;
 
