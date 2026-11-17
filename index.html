@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Antojitos Gourmet | Menú de Diciembre</title>
+    <title>Antojitos Gourmet | Menú y Cotizador</title>
     <style>
         * {
             margin: 0;
@@ -159,10 +159,19 @@
             color: #ffffff;
         }
 
+        .card-sub {
+            font-size: 0.82rem;
+            color: #bbbbbb;
+            margin-top: 5px;
+            line-height: 1.35;
+        }
+
         .check-icon {
             font-size: 1.2rem;
             color: #3b82f6;
             display: none;
+            margin-left: 12px;
+            flex-shrink: 0;
         }
 
         .menu-card.seleccionado .check-icon {
@@ -388,11 +397,11 @@
     <div class="container">
         <header>
             <div class="brand-name">ANTOJITOS GOURMET</div>
-            <p class="tagline">Menú de Diciembre 🎄 — Cotiza tu evento especial</p>
+            <p class="tagline">Menú Especial & Estaciones en Vivo — Solicita tu cotización</p>
         </header>
 
         <div class="subtitulo">
-            ✨ Completa los datos, selecciona tus platos de preferencia y solicita tu cotización al instante. ✨
+            ✨ Completa los datos, selecciona tus platos o estación de tacos y solicita tu cotización al instante. ✨
         </div>
 
         <div class="config-box">
@@ -475,7 +484,7 @@
                     <thead>
                         <tr>
                             <th>Categoría</th>
-                            <th>Platos Seleccionados</th>
+                            <th>Selección del Menú</th>
                         </tr>
                     </thead>
                     <tbody id="pdfTablaPlatos">
@@ -496,59 +505,74 @@
     <script>
         const menuBuffet = [
             {
+                categoria: "Área de Tacos (Preparativos & Estación)",
+                items: [
+                    { id: 101, nombre: "Proteína: Pollo desmenuzado sazonado", sub: "Pechuga jugosa desmechada con especias mexicanas y vegetales salteados." },
+                    { id: 102, nombre: "Proteína: Carne molida de res", sub: "Carne seleccionada sazonada al estilo tex-mex con toque de comino y ajo." },
+                    { id: 103, nombre: "Proteína: Cerdo al pastor / desmechado", sub: "Tierno cerdo marinado en adobo de achiote, especias y jugosa piña." },
+                    { id: 104, nombre: "Tortillas de maíz y de trigo", sub: "Tortillas suaves calientes acompañadas de crujientes nachos de maíz." },
+                    { id: 105, nombre: "Pico de gallo fresco", sub: "Mezcla clásica de tomate maduro, cebolla morada, cilantro fresco y limón." },
+                    { id: 106, nombre: "Guacamole artesanal", sub: "Crema de aguacate fresco triturado al momento con un toque cítrico." },
+                    { id: 107, nombre: "Queso cheddar fundido y rallado", sub: "Selección de quesos fundidos y rallados ideales para gratinar." },
+                    { id: 108, nombre: "Crema agria (Sour Cream) & Jalapeños", sub: "Crema suave refrescante y rodajas de chiles jalapeños encurtidos." },
+                    { id: 109, nombre: "Frijoles refritos & Maíz dulce", sub: "Guarniciones calientes sazonadas para complementar cada taco." },
+                    { id: 110, nombre: "Salsas: Roja picante, Verde y Chipotle", sub: "Variedad de salsas artesanales desde suaves hasta picantes." }
+                ]
+            },
+            {
                 categoria: "Proteínas",
                 items: [
-                    { id: 1, nombre: "Cerdo a la caja china" },
-                    { id: 2, nombre: "Pavo relleno" },
-                    { id: 3, nombre: "Pierna de cerdo horneada" },
-                    { id: 4, nombre: "Pechuga cordon blue" },
-                    { id: 5, nombre: "Lomo de cerdo" },
-                    { id: 6, nombre: "Pechuga a la crema" },
-                    { id: 37, nombre: "Pollo horneado" },
-                    { id: 38, nombre: "Filete de res" },
-                    { id: 39, nombre: "Salmón" }
+                    { id: 1, nombre: "Cerdo a la caja china", sub: "Asado lentamente hasta lograr una carne jugosa y cuero súper crujiente." },
+                    { id: 2, nombre: "Pavo relleno", sub: "Horneado al estilo tradicional con relleno aromático y salsa gravy." },
+                    { id: 3, nombre: "Pierna de cerdo horneada", sub: "Marinada por horas en sazón criollo y horneada en su propio jugo." },
+                    { id: 4, nombre: "Pechuga cordon blue", sub: "Pechuga rellena de jamón y queso fundido, empanizada y dorada." },
+                    { id: 5, nombre: "Lomo de cerdo", sub: "Medallones tiernos bañados en reducción de ciruelas o salsa de hongos." },
+                    { id: 6, nombre: "Pechuga a la crema", sub: "Filetes de pechuga a la plancha en cremosa salsa blanca con toques de ajo." },
+                    { id: 37, nombre: "Pollo horneado", sub: "Piezas de pollo doradas al horno con hierbas finas y especias de la casa." },
+                    { id: 38, nombre: "Filete de res", sub: "Corte tierno a la parrilla bañado en salsa demiglace o chimichurri." },
+                    { id: 39, nombre: "Salmón", sub: "Filete de salmón sellado a la perfección con toque de mantequilla y limón." }
                 ]
             },
             {
                 categoria: "Acompañantes",
                 items: [
-                    { id: 7, nombre: "Arroz con puerro, maduritos y tocineta" },
-                    { id: 8, nombre: "Arroz navideño" },
-                    { id: 9, nombre: "Moro de gandules con coco" },
-                    { id: 10, nombre: "Moro de habichuelas negras" },
-                    { id: 11, nombre: "Arroz a la milanesa" },
-                    { id: 12, nombre: "Pan de buffet" }
+                    { id: 7, nombre: "Arroz con puerro, maduritos y tocineta", sub: "Arroz blanco suelto salteado con puerro fino, plátano maduro y tocineta." },
+                    { id: 8, nombre: "Arroz navideño", sub: "Receta festiva con almendras tostadas, pasas, tocineta y especias." },
+                    { id: 9, nombre: "Moro de gandules con coco", sub: "Clásico moro dominicano cocinado con leche de coco natural." },
+                    { id: 10, nombre: "Moro de habichuelas negras", sub: "Arroz sazonado con habichuelas negras tiernas y verduras frescas." },
+                    { id: 11, nombre: "Arroz a la milanesa", sub: "Arroz amarillo aromático preparado con jamón, vegetales y queso." },
+                    { id: 12, nombre: "Pan de buffet", sub: "Panecillos suaves recién horneados ideales para acompañar el menú." }
                 ]
             },
             {
                 categoria: "Pastelones & Lasagna",
                 items: [
-                    { id: 13, nombre: "Lasagna de res" },
-                    { id: 14, nombre: "Lasagna de pollo" },
-                    { id: 15, nombre: "Canelones rellenos" },
-                    { id: 16, nombre: "Pastelón de berenjena" },
-                    { id: 17, nombre: "Pastelón de plátano maduro" },
-                    { id: 18, nombre: "Pasteles en hoja" },
-                    { id: 42, nombre: "Pastelón de plátano maduro y berenjena" }
+                    { id: 13, nombre: "Lasagna de res", sub: "Capas de pasta con carne molida en salsa bolognesa, bechamel y queso." },
+                    { id: 14, nombre: "Lasagna de pollo", sub: "Rellena de pollo desmenuzado en salsa cremosa y gratinada con mozzarella." },
+                    { id: 15, nombre: "Canelones rellenos", sub: "Rollos de pasta rellenos de carne o ricotta bañados en salsa napolitana." },
+                    { id: 16, nombre: "Pastelón de berenjena", sub: "Lonjas de berenjena asada con carne sazonada y abundante queso fundido." },
+                    { id: 17, nombre: "Pastelón de plátano maduro", sub: "Puré dulce de plátano maduro relleno de carne molida y queso gratinado." },
+                    { id: 18, nombre: "Pasteles en hoja", sub: "Masa tradicional de víveres rellena de carne sazonada, envuelta en hoja." },
+                    { id: 42, nombre: "Pastelón de plátano maduro y berenjena", sub: "Combinación perfecta de capas de maduro, berenjena, carne y queso." }
                 ]
             },
             {
                 categoria: "Ensaladas",
                 items: [
-                    { id: 19, nombre: "Ensalada rusa" },
-                    { id: 20, nombre: "Ensalada de pasta" },
-                    { id: 21, nombre: "Ensalada de lechuga al pesto" },
-                    { id: 22, nombre: "Ensalada capressa" },
-                    { id: 23, nombre: "Mix de lechuga" }
+                    { id: 19, nombre: "Ensalada rusa", sub: "Clásica mezcla de papas, zanahorias, huevos, petit pois y mayonesa." },
+                    { id: 20, nombre: "Ensalada de pasta", sub: "Tornillos de pasta fría con vegetales frescos, jamón y aderezo cremoso." },
+                    { id: 21, nombre: "Ensalada de lechuga al pesto", sub: "Hojas verdes frescas aderezadas con salsa pesto de albahaca y nueces." },
+                    { id: 22, nombre: "Ensalada capressa", sub: "Rodajas de tomate fresco, queso mozzarella, albahaca y aceite de oliva." },
+                    { id: 23, nombre: "Mix de lechuga", sub: "Variedad de lechugas hidropónicas con tomates cherry y vinagreta." }
                 ]
             },
             {
                 categoria: "Picaderas",
                 items: [
-                    { id: 24, nombre: "Pastelitos" },
-                    { id: 25, nombre: "Croquetas" },
-                    { id: 26, nombre: "Quipes" },
-                    { id: 27, nombre: "Sándwichitos" }
+                    { id: 24, nombre: "Pastelitos", sub: "Empanaditas crujientes rellenas de pollo, res o queso fundido." },
+                    { id: 25, nombre: "Croquetas", sub: "Cremosas por dentro y doradas por fuera, de pollo o jamón y queso." },
+                    { id: 26, nombre: "Quipes", sub: "Tradicionales de trigo crujiente rellenos de carne molida bien sazonada." },
+                    { id: 27, nombre: "Sándwichitos", sub: "Bocadillos suaves de pan de molde rellenos de pasta de pollo o jamón." }
                 ]
             }
         ];
@@ -570,9 +594,13 @@
             grid.className = 'menu-grid';
 
             cat.items.forEach(item => {
+                const subHtml = item.sub ? `<div class="card-sub">${item.sub}</div>` : '';
                 grid.innerHTML += `
                     <div class="menu-card" id="card-${item.id}" onclick="togglePlato(${item.id}, '${item.nombre}', '${cat.categoria}')">
-                        <div class="card-title">${item.nombre}</div>
+                        <div>
+                            <div class="card-title">${item.nombre}</div>
+                            ${subHtml}
+                        </div>
                         <div class="check-icon">✔️</div>
                     </div>
                 `;
@@ -602,7 +630,7 @@
 
             if (count > 0) {
                 panel.classList.add('active');
-                countText.textContent = count === 1 ? "1 plato seleccionado" : `${count} platos seleccionados`;
+                countText.textContent = count === 1 ? "1 opción seleccionada" : `${count} opciones seleccionadas`;
             } else {
                 panel.classList.remove('active');
             }
@@ -617,14 +645,14 @@
             const personas = parseInt(document.getElementById('numPersonas').value) || 0;
             const fecha = document.getElementById('fechaEvento').value.trim();
 
-            let msg = "🎄 *SOLICITUD DE COTIZACIÓN - ANTOJITOS GOURMET* 🎄\n\n";
+            let msg = "🍽️ *SOLICITUD DE COTIZACIÓN - ANTOJITOS GOURMET* 🍽️\n\n";
             if (nombre) msg += `👤 *Cliente:* ${nombre}\n`;
             if (telefono) msg += `📞 *Teléfono:* ${telefono}\n`;
             if (rnc) msg += `🏢 *RNC / Cédula:* ${rnc}\n`;
             if (personas > 0) msg += `👥 *Personas:* ${personas}\n`;
             if (fecha) msg += `📅 *Fecha:* ${fecha}\n`;
             
-            msg += `\n*Platos Seleccionados:*\n`;
+            msg += `\n*Selección del Menú:*\n`;
             for (let id in seleccionados) {
                 msg += `• ${seleccionados[id].nombre}\n`;
             }
